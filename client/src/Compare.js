@@ -133,6 +133,16 @@ class Compare extends Component {
     });
   }
 
+  exportSTEM = (e) => {
+    const { entitiesPermutations } = this.state;
+
+    const csvOutput = entitiesPermutations.filter(link => link.score !== 0).map(link => {
+      const sign = link.score > 0 ? '+' : '-';
+      return `${sign},${link.entity1},${link.entity2},1.0`;
+    }).join('\n');
+    this.download(csvOutput, 'alignments.csv');
+  }
+
   download = (content, fileName) => {
     const pom = document.createElement('a');
     pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
@@ -302,8 +312,9 @@ class Compare extends Component {
               >
                 <SubMenu title={<span className="submenu-title-wrapper">
                   <Icon type="cloud-download" />Export alignments</span>}>
-                  <Menu.Item key="export:edoal" onClick={this.exportEDOAL}>EDOAL format (Turtle)</Menu.Item>
                   <Menu.Item key="export:owl" onClick={this.exportOWL}>OWL format (N-Triples)</Menu.Item>
+                  <Menu.Item key="export:stem" onClick={this.exportSTEM}>STEM gold-standard format (CSV)</Menu.Item>
+                  <Menu.Item key="export:edoal" onClick={this.exportEDOAL}>EDOAL format (Turtle)</Menu.Item>
                 </SubMenu>
               </Menu>
               {/*<span style={{ color: '#fff' }}>Changes have been saved!</span>*/}
